@@ -1,0 +1,372 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#f6eddc">
+<title>Magic Brand Quest</title>
+<style>
+:root{--cream:#f6eddc;--paper:#fffaf0;--ink:#3b2b24;--gold:#b88932;--purple:#60477b;--red:#b64b43;--green:#477456}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;min-height:100%;font-family:Georgia,"Noto Serif Thai",serif;background:radial-gradient(circle at 50% 0,#fffdf7 0,var(--cream) 45%,#eadcc3 100%);color:var(--ink)}
+body{min-height:100vh;overflow-x:hidden}
+#app{min-height:100vh;padding:18px}
+.screen{display:none;min-height:calc(100vh - 36px);align-items:center;justify-content:center}
+.screen.active{display:flex}
+.panel{width:min(1000px,100%);background:rgba(255,250,240,.94);border:2px solid #d4b875;border-radius:28px;box-shadow:0 16px 50px #6d513022;padding:clamp(22px,5vw,48px);position:relative;overflow:hidden}
+.panel:before,.panel:after{content:"✦";position:absolute;color:#c49a49;opacity:.35;font-size:44px}
+.panel:before{top:12px;left:18px}.panel:after{bottom:8px;right:18px}
+h1,h2{margin:.2em 0 .35em;text-align:center;color:var(--purple)}
+h1{font-size:clamp(38px,8vw,72px);letter-spacing:2px}
+h2{font-size:clamp(30px,6vw,48px)}
+.subtitle{text-align:center;font-size:clamp(16px,3vw,21px);margin-bottom:26px}
+button{font:inherit;border:0;cursor:pointer;touch-action:manipulation}
+.magic-btn{display:block;margin:18px auto 0;padding:15px 32px;min-width:190px;border-radius:999px;background:linear-gradient(#755a96,#503c69);color:white;border:2px solid #cfae62;box-shadow:0 8px 0 #382a48,0 12px 24px #4d396633;font-size:20px;font-weight:bold}
+.magic-btn:active{transform:translateY(5px);box-shadow:0 3px 0 #382a48}
+.small-btn{min-width:0;padding:10px 18px;font-size:16px}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:20px}
+.level-tag{font-weight:bold;color:var(--purple);font-size:18px}
+.timer{font-family:ui-monospace,monospace;font-size:24px;font-weight:bold;background:#fff;border:2px solid #c9a858;border-radius:14px;padding:8px 14px;min-width:92px;text-align:center}
+.timer.danger{color:var(--red);animation:pulse 1s infinite}
+@keyframes pulse{50%{transform:scale(1.05)}}
+.progress{text-align:center;margin:8px 0 18px;font-weight:bold}
+.cards{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+.choice{background:#fff;border:3px solid #dcc89d;border-radius:20px;padding:12px;min-height:220px;transition:.15s;position:relative}
+.choice:hover,.choice.selected{border-color:var(--gold);transform:translateY(-3px);box-shadow:0 10px 25px #8a6a3020}
+.choice img{width:100%;height:185px;object-fit:contain;border-radius:14px;background:#faf7ef}
+.choice .label{text-align:center;margin-top:8px;font-weight:bold}
+.choice.correct{border-color:var(--green);background:#eff8f0}
+.choice.wrong{border-color:var(--red);background:#fff0ee}
+.feedback{text-align:center;min-height:28px;font-weight:bold;margin:12px 0}
+.match-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.match-side{display:flex;flex-direction:column;gap:12px}
+.match-card{background:#fff;border:3px solid #dcc89d;border-radius:18px;padding:10px;min-height:150px;display:flex;align-items:center;justify-content:center}
+.match-card img{width:100%;height:130px;object-fit:contain}
+.match-card.selected{border-color:var(--purple);box-shadow:0 0 0 4px #60477b22}
+.match-card.matched{border-color:var(--green);background:#eff8f0}
+.match-title{text-align:center;font-weight:bold;color:var(--purple);margin-bottom:8px}
+.price-items{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:20px}
+.food-card{background:white;border:3px solid #dcc89d;border-radius:18px;padding:10px;cursor:grab;user-select:none;touch-action:none}
+.food-card.dragging{opacity:.45}
+.food-card img{width:100%;height:170px;object-fit:contain}
+.info{text-align:center;font-size:14px;color:#6c594d;min-height:20px}
+.dropzone-wrap{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.dropzone{min-height:150px;border:3px dashed #c7aa69;border-radius:18px;background:#fffaf0;display:flex;align-items:center;justify-content:center;padding:8px;position:relative}
+.dropzone.over{background:#f3ead8;border-color:var(--purple)}
+.dropzone .num{position:absolute;top:5px;left:8px;font-weight:bold;color:#876c36}
+.dropzone img{max-width:100%;max-height:130px;object-fit:contain}
+.price-reveal{font-weight:bold;text-align:center;color:var(--purple);margin-top:4px}
+.order-note{text-align:center;font-weight:bold;margin:10px 0 18px;color:#60477b}
+.error-note{background:#fff0ee;border:1px solid #e2aaa4;padding:10px;border-radius:12px;text-align:center;margin-top:12px}
+.win-icon{font-size:80px;text-align:center}
+@media(max-width:650px){
+ .panel{padding:20px 14px;border-radius:20px}
+ .cards{gap:10px}.choice{min-height:160px;padding:7px}.choice img{height:135px}
+ .match-grid{gap:8px}.match-card{min-height:115px;padding:6px}.match-card img{height:100px}
+ .price-items,.dropzone-wrap{gap:8px}.food-card img{height:120px}.dropzone{min-height:115px}
+ .topbar{align-items:flex-start}.timer{font-size:19px;min-width:82px}
+}
+</style>
+</head>
+<body>
+<div id="app">
+<section id="start" class="screen active"><div class="panel">
+<div class="win-icon">🍂</div><h1>โลโก้ที่สาบสูญ</h1>
+<p style="text-align:center">ถูกต้องทั้งหมด 3 steps<br>เพื่อรับวัตถุดิบไป 1 อย่าง!</p>
+<button class="magic-btn" onclick="startGame()">START ✨</button>
+</div></section>
+
+<section id="level1" class="screen"><div class="panel">
+<div class="topbar"><span class="level-tag">LEVEL 1</span><span id="timer1" class="timer">01:00</span></div>
+<h2>real or cake</h2><p class="subtitle">จริง หรือ เค้ก?</p>
+<div id="l1progress" class="progress"></div><div id="l1cards" class="cards"></div><div id="l1feedback" class="feedback"></div>
+</div></section>
+
+<section id="level2" class="screen"><div class="panel">
+<div class="topbar"><span class="level-tag">LEVEL 2</span><span id="timer2" class="timer">01:00</span></div>
+<h2>แบรนด์ของฉัน สินค้าของใคร</h2><p class="subtitle">จับคู่แบรนด์และสินค้าให้ถูกต้อง</p>
+<div id="l2progress" class="progress"></div><div id="matchGrid" class="match-grid"></div><div id="l2feedback" class="feedback"></div>
+</div></section>
+
+<section id="level3" class="screen"><div class="panel">
+<div class="topbar"><span class="level-tag">LEVEL 3</span><span id="timer3" class="timer">01:00</span></div>
+<h2>พาราเท่าไหร่คะ</h2><p class="order-note">เรียงจากราคาน้อย → มาก</p>
+<div id="priceItems" class="price-items"></div><div id="dropzones" class="dropzone-wrap"></div>
+<div id="l3feedback" class="feedback"></div><button id="checkBtn" class="magic-btn" onclick="checkLevel3()">ตรวจสอบ 🔮</button>
+</div></section>
+
+<section id="gameover" class="screen"><div class="panel">
+<div class="win-icon">💫</div><h2>GAME OVER</h2><p class="subtitle"></p>
+<button class="magic-btn" onclick="goHome()">Home 🏠</button>
+</div></section>
+
+<section id="win" class="screen"><div class="panel">
+<div class="win-icon">🏆✨</div><h2>CONGRATULATIONS!</h2><p class="subtitle">เลือกวัตถุดิบได้ 1 อย่างจ้า</p>
+<button class="magic-btn" onclick="goHome()">Home 🏠</button>
+</div></section>
+
+<script>
+const DATA = [
+  {"realLogo": "https://drive.google.com/thumbnail?id=1lOktLG9gfk3NW7EpNhREupn8gp1945-c&sz=w1000", "fakeLogo": "https://drive.google.com/thumbnail?id=1TMHtpfXeDU_bWykM0BhvPWiCb7h3y1_r&sz=w1000", "menu": "https://drive.google.com/thumbnail?id=1ec9vNsdb3ZrXb87mNKRoCuEzBch_GOPa&sz=w1000", "price": "36011", "info": ""},
+  {"realLogo": "https://drive.google.com/thumbnail?id=1Uozp6XpCFzMxbTtM2rJkpnxdqUqtcCJM&sz=w1000", "fakeLogo": "https://drive.google.com/thumbnail?id=1bwxASm1OHc4RkVM5E5LhubtubrOPLEin&sz=w1000", "menu": "https://drive.google.com/thumbnail?id=14AAaO1LZ50u4_Kdd_1Z3gXlKoBeNB6Kd&sz=w1000", "price": "฿2.2M", "info": ""},
+  {"realLogo": "https://drive.google.com/thumbnail?id=1j41o2JvIkdQEOCpcntDwC0B4xYp6bIBJ&sz=w1000", "fakeLogo": "https://drive.google.com/thumbnail?id=1-s5wYE6PFbA5jf3tcQbbJ9T7yD74q8kX&sz=w1000", "menu": "https://drive.google.com/thumbnail?id=1XnS_M7FwKf7L7ejDoQa792p2fTi0ESso&sz=w1000", "price": "43900", "info": ""},
+  {"realLogo": "https://drive.google.com/thumbnail?id=15HRT8-Qz60AeegXbySXhnl8TnHR-3yPd&sz=w1000", "fakeLogo": "https://drive.google.com/thumbnail?id=1QQ8mLaO2KRod7h0iHftLauc76vWNuXK8&sz=w1000", "menu": "https://drive.google.com/thumbnail?id=1nKgr_QjTM88bYB6z6A8G4DHRlnA_qL_y&sz=w1000", "price": "3900", "info": ""},
+  {"realLogo": "https://drive.google.com/thumbnail?id=1XcOFOsHQS4kjpFImskDvolTKZxWL1Bv7&sz=w1000", "fakeLogo": "https://drive.google.com/thumbnail?id=1DiIG_8I2ZTqzQX7ZLKd6Q2WRi_mLL5a7&sz=w1000", "menu": "https://drive.google.com/thumbnail?id=1fcVCjWShlqZnO7XbJ7NQGhaUbeokYD1M&sz=w1000", "price": "145", "info": ""},
+  {"realLogo": "https://drive.google.com/thumbnail?id=1ygcMJqjm6s8PZ-9azN1yCNTyEhd2n7mw&sz=w1000", "fakeLogo": "https://drive.google.com/thumbnail?id=1zmWqn79Zm4rwT8urAeKoHIEhXViL13MV&sz=w1000", "menu": "https://drive.google.com/thumbnail?id=1HJZ3HaHesD1UkI01xgTro6IsK7bwbD6W&sz=w1000", "price": "1393", "info": ""},
+  {"realLogo": "https://drive.google.com/thumbnail?id=1Y-x5uTvLrkDLrBErUPjnov6TD9kdR4ys&sz=w1000", "fakeLogo": "https://drive.google.com/thumbnail?id=1-L5UFhmbpQdnK_qLQmTR-hoiZjtvdwJt&sz=w1000", "menu": "https://drive.google.com/thumbnail?id=1dlCmoXBKc2mKwxYf8BgkoY5OuStrmYNg&sz=w1000", "price": "฿4.7M", "info": ""},
+  {"realLogo": "https://drive.google.com/thumbnail?id=14vsZcH0VGfmrnAS2t4iPN94VKDtNgSWj&sz=w1000", "fakeLogo": "https://drive.google.com/thumbnail?id=1dUY_CPXf08p2JpjYM033aKNogl6XvE1U&sz=w1000", "menu": "https://drive.google.com/thumbnail?id=1rp0P2EJ3rXTOkTCfiB27TZxMy3bqXiSW&sz=w1000", "price": "155", "info": "size venti"},
+  {"realLogo": "https://drive.google.com/thumbnail?id=1_ExSdSMtwvTm6wL7wPaVwALSmZTL0IyQ&sz=w1000", "fakeLogo": "https://drive.google.com/thumbnail?id=1zTM5trnDKN6VrRT33c0QhYMNHvoFnoh9&sz=w1000", "menu": "https://drive.google.com/thumbnail?id=1QjY2Y7YdI5Mrf_g4ZCGY1qRt7Z1Aocyq&sz=w1000", "price": "259", "info": "size L"},
+  {"realLogo": "https://drive.google.com/thumbnail?id=1taXQHn77B6fo45o0qJy2pCBOo2RfR8-Z&sz=w1000", "fakeLogo": "https://drive.google.com/thumbnail?id=13r75V_GD6Vg9YXsi8ozxdcQj5XW6v14v&sz=w1000", "menu": "https://drive.google.com/thumbnail?id=1bOhCrY6vrixhsXsV7Iz-BaDrhvYRdTfE&sz=w1000", "price": "179", "info": ""},
+  {"realLogo": "https://drive.google.com/thumbnail?id=1Ai5g4TT-NFtG30wD4uLIds1KRGiG6blY&sz=w1000", "fakeLogo": "https://drive.google.com/thumbnail?id=1ExcG-5OELYRdZGh7o3C4MQfGgJc6ntnX&sz=w1000", "menu": "https://drive.google.com/thumbnail?id=140Dz4n59Vr1hisGuQk0-BkIfUJZMx8gT&sz=w1000", "price": "159", "info": ""},
+  {"realLogo": "https://drive.google.com/thumbnail?id=1Dl1bW1wcGpS932InQVZjEQ8OI9YcMQ39&sz=w1000", "fakeLogo": "https://drive.google.com/thumbnail?id=116wtzhbVuFeBtlF1jYZg5oZXIxjJvMCh&sz=w1000", "menu": "https://drive.google.com/thumbnail?id=1oahNlUxcYeohgcTCELeBp5RKiMraICts&sz=w1000", "price": "169", "info": ""},
+  {"realLogo": "https://drive.google.com/thumbnail?id=1G8Y64z0IXiJ52FyGn-2O2LTmZfYT0ZU1&sz=w1000", "fakeLogo": "https://drive.google.com/thumbnail?id=1RTSdEVFoJsSPeLrts2USdY6fLPmA3i-I&sz=w1000", "menu": "https://drive.google.com/thumbnail?id=16QKgEJYbJdfKSWb4X-ERiFouYmoGQSOA&sz=w1000", "price": "59", "info": "Ultra smooth"}
+];
+const SHEET_GID = "0"; // เปลี่ยนถ้า Google Sheet ใช้แท็บอื่น
+const USE_LIVE_SHEET = false; // true = พยายามดึงข้อมูลจาก Google Sheet ทุกครั้งที่เริ่มเกม
+
+let data=[...DATA], timerId=null, timeLeft=60, currentScreen="";
+let state={usedL1:new Set(), selectedBrands:[], mistakes:0, l1Set:null, matches:{}, l2SelectedLogo:null, l2Matched:new Set(), priceItems:[], order:[], l3Mistakes:0};
+
+function goHome(){
+  clearInterval(timerId);
+  show('start');
+}
+function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');currentScreen=id;window.scrollTo(0,0)}
+function shuffle(a){a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function driveImg(url){const m=(url||"").match(/(?:id=|\/d\/)([A-Za-z0-9_-]+)/);return m?`https://drive.google.com/thumbnail?id=${m[1]}&sz=w1000`:url}
+function parsePrice(v){
+ let s=String(v??"").replace(/,/g,"").trim().toLowerCase();
+ let m=s.match(/([0-9.]+)\s*m/); if(m)return parseFloat(m[1])*1000000;
+ s=s.replace(/[฿$]/g,""); let n=parseFloat(s.replace(/[^0-9.]/g,"")); return Number.isFinite(n)?n:Infinity;
+}
+function resetTimer(elId,seconds=60){
+ clearInterval(timerId);timeLeft=seconds;renderTimer(elId);
+ timerId=setInterval(()=>{timeLeft--;renderTimer(elId);if(timeLeft<=0){clearInterval(timerId);gameOver()}},1000)
+}
+function renderTimer(id){const el=document.getElementById(id);if(!el)return;el.textContent=`${String(Math.floor(timeLeft/60)).padStart(2,"0")}:${String(timeLeft%60).padStart(2,"0")}`;el.classList.toggle("danger",timeLeft<=10)}
+async function startGame(){
+ clearInterval(timerId);
+ state={usedL1:new Set(),selectedBrands:[],mistakes:0,l1Set:null,matches:{},l2SelectedLogo:null,l2Matched:new Set(),priceItems:[],order:[],l3Mistakes:0};
+ if(USE_LIVE_SHEET) await tryLoadSheet();
+ startLevel1();
+}
+async function tryLoadSheet(){
+ try{
+  const url=`https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?gid=${SHEET_GID}&tqx=out:json`;
+  const txt=await (await fetch(url)).text();
+  const json=JSON.parse(txt.substring(txt.indexOf("{"),txt.lastIndexOf("}")+1));
+  const rows=json.table.rows;
+  const vals=rows.map(r=>r.c.map(c=>c?.v??""));
+  if(vals.length>1){
+   const heads=vals[0].map(x=>String(x).trim().toLowerCase());
+   const ix={realLogo:heads.indexOf("reallogo"),fakeLogo:heads.indexOf("fakelogo"),menu:heads.indexOf("menu"),price:heads.indexOf("price"),info:heads.indexOf("info")};
+   const parsed=vals.slice(1).map(r=>({realLogo:driveImg(r[ix.realLogo]),fakeLogo:driveImg(r[ix.fakeLogo]),menu:driveImg(r[ix.menu]),price:r[ix.price],info:r[ix.info]||""})).filter(x=>x.realLogo&&x.fakeLogo&&x.menu);
+   if(parsed.length) data=parsed;
+  }
+ }catch(e){console.warn("Live Sheet load failed; using embedded data.",e)}
+}
+function startLevel1(){
+ state.mistakes=0;state.usedL1.clear();state.selectedBrands=[];show("level1");nextL1();
+}
+function nextL1(){
+ const available=data.map((_,i)=>i).filter(i=>!state.usedL1.has(i));
+ if(available.length<1)return gameOver();
+ const idx=available[Math.floor(Math.random()*available.length)];
+ state.usedL1.add(idx);state.l1Set=idx;
+ const row=data[idx], cards=shuffle([{real:true,url:row.realLogo},{real:false,url:row.fakeLogo}]);
+ document.getElementById("l1progress").textContent=`ชุดที่ ${state.selectedBrands.length+1} / 3 • ผิด ${state.mistakes} / 1`;
+ document.getElementById("l1feedback").textContent="";
+ document.getElementById("l1cards").innerHTML=cards.map((c,n)=>`<button class="choice" onclick="answerL1(${c.real},this)"><img src="${c.url}" alt="Logo ${n+1}"><div class="label"></div></button>`).join("");
+ if(!timerId||timeLeft<=0)resetTimer("timer1"); else renderTimer("timer1");
+}
+function answerL1(isReal,btn){
+ const all=document.querySelectorAll("#l1cards .choice");all.forEach(x=>x.disabled=true);
+ if(isReal){
+  btn.classList.add("correct");state.selectedBrands.push(state.l1Set);
+  document.getElementById("l1feedback").textContent="✨ ถูกต้อง! เวทมนตร์ทำงานแล้ว";
+  setTimeout(()=>{if(state.selectedBrands.length>=3)startLevel2();else nextL1()},500);
+ }else{
+  btn.classList.add("wrong");state.mistakes++;
+  document.getElementById("l1feedback").textContent="🔮 ผิดครั้งที่ 1 — สุ่มชุดใหม่!";
+  if(state.mistakes>=2)setTimeout(gameOver,500); else setTimeout(nextL1,500);
+ }
+}
+function startLevel2(){
+ clearInterval(timerId);state.mistakes=0;state.l2Matched=new Set();state.matches={};state.l2SelectedLogo=null;
+ show("level2");buildLevel2();resetTimer("timer2");
+}
+function buildLevel2(){
+ const selected=state.selectedBrands.map(i=>data[i]);
+ // Three logo identities and three menu cards; index pairing is the answer.
+ const logos=shuffle(selected.map((r,i)=>({i,url:r.realLogo})));
+ const menus=shuffle(selected.map((r,i)=>({i,url:r.menu})));
+ document.getElementById("l2progress").textContent=`จับคู่แล้ว ${state.l2Matched.size} / 3 • ผิด ${state.mistakes} / 1`;
+ document.getElementById("matchGrid").innerHTML=`
+ <div><div class="match-title">แบรนด์</div><div class="match-side">${logos.map(x=>`<button class="match-card ${state.l2Matched.has(x.i)?"matched":""}" data-logo="${x.i}" onclick="selectLogo(${x.i},this)"><img src="${x.url}"></button>`).join("")}</div></div>
+ <div><div class="match-title">สินค้า</div><div class="match-side">${menus.map(x=>`<button class="match-card ${state.l2Matched.has(x.i)?"matched":""}" data-menu="${x.i}" onclick="selectMenu(${x.i},this)"><img src="${x.url}"></button>`).join("")}</div></div>
+ <div style="display:flex;align-items:center;justify-content:center;text-align:center;color:#60477b;font-weight:bold"></div>`;
+}
+function selectLogo(i,el){if(state.l2Matched.has(i))return;document.querySelectorAll('[data-logo]').forEach(x=>x.classList.remove("selected"));state.l2SelectedLogo=i;el.classList.add("selected")}
+function selectMenu(i,el){
+ if(state.l2SelectedLogo===null||state.l2Matched.has(i))return;
+ if(i===state.l2SelectedLogo){
+  state.l2Matched.add(i);
+  
+  // ลบกรอบไฮไลต์การเลือกเดิม และใส่สถานะ matched ให้กับการ์ดทั้งสองใบโดยไม่สลับตำแหน่ง
+  const logoCard = document.querySelector(`[data-logo="${i}"]`);
+  if(logoCard) { logoCard.classList.remove("selected"); logoCard.classList.add("matched"); }
+  if(el) { el.classList.add("matched"); }
+  
+  state.l2SelectedLogo = null;
+  document.getElementById("l2feedback").textContent = "✨ จับคู่ถูกต้อง!";
+  document.getElementById("l2progress").textContent = `จับคู่แล้ว ${state.l2Matched.size} / 3 • ผิด ${state.mistakes} / 1`;
+  
+  if(state.l2Matched.size === 3) setTimeout(startLevel3, 500);
+ }else{
+  state.mistakes++;
+  state.l2SelectedLogo = null;
+  document.querySelectorAll('[data-logo]').forEach(x => x.classList.remove("selected"));
+  document.getElementById("l2progress").textContent = `จับคู่แล้ว ${state.l2Matched.size} / 3 • ผิด ${state.mistakes} / 1`;
+  document.getElementById("l2feedback").textContent = "❌ จับคู่ผิด — ลองใหม่อีกครั้ง";
+  
+  if(state.mistakes >= 2) setTimeout(gameOver, 500);
+ }
+}
+function startLevel3(){
+ clearInterval(timerId);
+ state.l3Mistakes = 0;
+ state.priceItems = shuffle(state.selectedBrands.map(i => ({idx: i, ...data[i], revealed: false})));
+ state.order = [null, null, null];
+ 
+ const btn = document.getElementById("checkBtn");
+ if(btn) {
+  btn.textContent = "ตรวจสอบ 🔮";
+  btn.onclick = checkLevel3;
+  btn.disabled = false;
+ }
+ 
+ show("level3");
+ buildLevel3();
+ resetTimer("timer3");
+}
+
+function buildLevel3(){
+ // วาดการ์ดอาหารด้านบน
+ document.getElementById("priceItems").innerHTML = state.priceItems.map((x, i) => {
+  const isPlaced = state.order.includes(i);
+  return `
+  <div class="food-card ${isPlaced ? 'placed' : ''}" 
+       draggable="${!isPlaced}" 
+       id="food-${i}" 
+       data-i="${i}" 
+       ondragstart="dragStart(event, ${i})"
+       onclick="clickFoodCard(${i})"
+       style="${isPlaced ? 'opacity: 0.25; pointer-events: none;' : 'cursor: grab;'}">
+   <img src="${x.menu}" alt="menu">
+   <div class="info">${x.info || ""}</div>
+  </div>`;
+ }).join("");
+
+ // วาดช่องวาง (Dropzone)
+ document.getElementById("dropzones").innerHTML = state.order.map((item, slot) => `
+ <div class="dropzone" 
+      data-slot="${slot}" 
+      ondragover="allowDrop(event)" 
+      ondragleave="dragLeave(event)"
+      ondrop="dropFood(event, ${slot})" 
+      onclick="clickDropzone(${slot})">
+  <span class="num">${slot + 1}</span>
+  ${item !== null ? `
+    <div style="cursor: pointer; width: 100%; text-align: center;">
+      <img src="${state.priceItems[item].menu}">
+      <div class="info">${state.priceItems[item].info || ""}</div>
+      ${state.priceItems[item].revealed ? `<div class="price-reveal">${String(state.priceItems[item].price).startsWith('฿') ? state.priceItems[item].price : '฿' + state.priceItems[item].price}</div>` : ""}
+    </div>` : "<span style='color:#a89260;'>วางที่นี่ / แตะเพื่อใส่</span>"}
+ </div>`).join("");
+}
+
+// System Drag & Drop (สำหรับคอมพิวเตอร์)
+function allowDrop(e) {
+ e.preventDefault();
+ e.currentTarget.classList.add('over');
+}
+
+function dragLeave(e) {
+ e.currentTarget.classList.remove('over');
+}
+
+function dragStart(e, i) {
+ e.dataTransfer.setData("text/plain", i);
+}
+
+function dropFood(e, slot) {
+ e.preventDefault();
+ e.currentTarget.classList.remove('over');
+ const i = Number(e.dataTransfer.getData("text/plain"));
+ if (!isNaN(i)) {
+  placeFood(i, slot);
+ }
+}
+
+// System Tap/Click (สำหรับมือถือ หรือคนถนัดกดเลือก)
+function clickFoodCard(i) {
+ if (state.order.includes(i)) return;
+ const emptySlot = state.order.findIndex(x => x === null);
+ if (emptySlot >= 0) {
+  placeFood(i, emptySlot);
+ }
+}
+
+function clickDropzone(slot) {
+ if (state.order[slot] !== null) {
+  state.order[slot] = null; // ถอดรูปออก คืนค่ากลับไปด้านบน
+  buildLevel3();
+ }
+}
+
+function placeFood(i, slot) {
+ const existingIndex = state.order.indexOf(i);
+ if (existingIndex >= 0) {
+  state.order[existingIndex] = null;
+ }
+ state.order[slot] = i;
+ buildLevel3();
+}
+
+function checkLevel3(){
+ if(state.order.some(x => x === null)){
+  document.getElementById("l3feedback").textContent = "⚠️ กรุณาใส่อาหารให้ครบ 3 ช่องก่อน";
+  return;
+ }
+ 
+ const prices = state.order.map(i => parsePrice(state.priceItems[i].price));
+ const ok = prices[0] <= prices[1] && prices[1] <= prices[2];
+ const btn = document.getElementById("checkBtn");
+ 
+ if(ok){
+  clearInterval(timerId);
+  state.priceItems.forEach(x => x.revealed = true);
+  buildLevel3();
+  document.getElementById("l3feedback").textContent = "🏆 ถูกต้อง! เรียงราคาได้สมบูรณ์";
+  
+  btn.textContent = "ถัดไป ➡️";
+  btn.onclick = () => show("win");
+ } else {
+  state.l3Mistakes++;
+  if(state.l3Mistakes === 1){
+   document.getElementById("l3feedback").textContent = "🔮 ยังไม่ถูกต้อง! ลองสลับลำดับใหม่อีกครั้ง";
+  } else {
+   clearInterval(timerId);
+   state.priceItems.forEach(x => x.revealed = true);
+   buildLevel3();
+   document.getElementById("l3feedback").textContent = "❌ ผิดครั้งที่ 2!";
+   
+   btn.textContent = "ถัดไป ➡️";
+   btn.onclick = () => gameOver();
+  }
+ }
+}
+function gameOver(){clearInterval(timerId);show("gameover")}
+</script>
+</body>
+</html>
