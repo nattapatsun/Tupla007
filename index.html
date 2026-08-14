@@ -33,28 +33,31 @@ button{font:inherit;border:0;cursor:pointer;touch-action:manipulation}
 .cards{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
 .choice{background:#fff;border:3px solid #dcc89d;border-radius:20px;padding:12px;min-height:220px;transition:.15s;position:relative}
 .choice:hover,.choice.selected{border-color:var(--gold);transform:translateY(-3px);box-shadow:0 10px 25px #8a6a3020}
-.choice img{width:100%;height:185px;object-fit:contain;border-radius:14px;background:#faf7ef}
+.choice img{width:100%;height:185px;object-fit:contain;border-radius:14px;background:#faf7ef;pointer-events:none}
 .choice .label{text-align:center;margin-top:8px;font-weight:bold}
 .choice.correct{border-color:var(--green);background:#eff8f0}
 .choice.wrong{border-color:var(--red);background:#fff0ee}
 .feedback{text-align:center;min-height:28px;font-weight:bold;margin:12px 0}
-.match-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
-.match-side{display:flex;flex-direction:column;gap:12px}
-.match-card{background:#fff;border:3px solid #dcc89d;border-radius:18px;padding:10px;min-height:150px;display:flex;align-items:center;justify-content:center}
-.match-card img{width:100%;height:130px;object-fit:contain}
-.match-card.selected{border-color:var(--purple);box-shadow:0 0 0 4px #60477b22}
-.match-card.matched{border-color:var(--green);background:#eff8f0}
+
+/* Level 2 Layout & Style */
+.match-grid{display:flex;flex-direction:column;gap:24px;max-width:800px;margin:0 auto}
+.match-side{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.match-card{background:#fff;border:3px solid #dcc89d;border-radius:18px;padding:10px;min-height:140px;display:flex;align-items:center;justify-content:center;transition:all 0.15s ease}
+.match-card img{width:100%;height:120px;object-fit:contain;pointer-events:none}
+.match-card.selected{border-color:var(--purple);box-shadow:0 0 0 4px #60477b33;transform:scale(1.02)}
+.match-card.matched{border-color:var(--green);background:#eff8f0;opacity:0.65;pointer-events:none}
 .match-title{text-align:center;font-weight:bold;color:var(--purple);margin-bottom:8px}
+
 .price-items{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:20px}
 .food-card{background:white;border:3px solid #dcc89d;border-radius:18px;padding:10px;cursor:grab;user-select:none;touch-action:none}
 .food-card.dragging{opacity:.45}
-.food-card img{width:100%;height:170px;object-fit:contain}
+.food-card img{width:100%;height:170px;object-fit:contain;pointer-events:none}
 .info{text-align:center;font-size:14px;color:#6c594d;min-height:20px}
 .dropzone-wrap{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
 .dropzone{min-height:150px;border:3px dashed #c7aa69;border-radius:18px;background:#fffaf0;display:flex;align-items:center;justify-content:center;padding:8px;position:relative}
 .dropzone.over{background:#f3ead8;border-color:var(--purple)}
 .dropzone .num{position:absolute;top:5px;left:8px;font-weight:bold;color:#876c36}
-.dropzone img{max-width:100%;max-height:130px;object-fit:contain}
+.dropzone img{max-width:100%;max-height:130px;object-fit:contain;pointer-events:none}
 .price-reveal{font-weight:bold;text-align:center;color:var(--purple);margin-top:4px}
 .order-note{text-align:center;font-weight:bold;margin:10px 0 18px;color:#60477b}
 .error-note{background:#fff0ee;border:1px solid #e2aaa4;padding:10px;border-radius:12px;text-align:center;margin-top:12px}
@@ -62,7 +65,7 @@ button{font:inherit;border:0;cursor:pointer;touch-action:manipulation}
 @media(max-width:650px){
  .panel{padding:20px 14px;border-radius:20px}
  .cards{gap:10px}.choice{min-height:160px;padding:7px}.choice img{height:135px}
- .match-grid{gap:8px}.match-card{min-height:115px;padding:6px}.match-card img{height:100px}
+ .match-side{gap:8px}.match-card{min-height:100px;padding:6px}.match-card img{height:80px}
  .price-items,.dropzone-wrap{gap:8px}.food-card img{height:120px}.dropzone{min-height:115px}
  .topbar{align-items:flex-start}.timer{font-size:19px;min-width:82px}
 }
@@ -121,11 +124,16 @@ const DATA = [
   {"realLogo": "https://drive.google.com/thumbnail?id=1Dl1bW1wcGpS932InQVZjEQ8OI9YcMQ39&sz=w1000", "fakeLogo": "https://drive.google.com/thumbnail?id=116wtzhbVuFeBtlF1jYZg5oZXIxjJvMCh&sz=w1000", "menu": "https://drive.google.com/thumbnail?id=1oahNlUxcYeohgcTCELeBp5RKiMraICts&sz=w1000", "price": "169", "info": ""},
   {"realLogo": "https://drive.google.com/thumbnail?id=1G8Y64z0IXiJ52FyGn-2O2LTmZfYT0ZU1&sz=w1000", "fakeLogo": "https://drive.google.com/thumbnail?id=1RTSdEVFoJsSPeLrts2USdY6fLPmA3i-I&sz=w1000", "menu": "https://drive.google.com/thumbnail?id=16QKgEJYbJdfKSWb4X-ERiFouYmoGQSOA&sz=w1000", "price": "59", "info": "Ultra smooth"}
 ];
-const SHEET_GID = "0"; // เปลี่ยนถ้า Google Sheet ใช้แท็บอื่น
-const USE_LIVE_SHEET = false; // true = พยายามดึงข้อมูลจาก Google Sheet ทุกครั้งที่เริ่มเกม
+const SHEET_GID = "0";
+const USE_LIVE_SHEET = false;
 
 let data=[...DATA], timerId=null, timeLeft=60, currentScreen="";
-let state={usedL1:new Set(), selectedBrands:[], mistakes:0, l1Set:null, matches:{}, l2SelectedLogo:null, l2Matched:new Set(), priceItems:[], order:[], l3Mistakes:0};
+let state={
+  usedL1:new Set(), selectedBrands:[], mistakes:0, l1Set:null, 
+  l2SelectedLogo:null, l2SelectedMenu:null, l2Matched:new Set(), 
+  l2Logos:[], l2Menus:[],
+  priceItems:[], order:[], l3Mistakes:0
+};
 
 function goHome(){
   clearInterval(timerId);
@@ -144,12 +152,14 @@ function resetTimer(elId,seconds=60){
  timerId=setInterval(()=>{timeLeft--;renderTimer(elId);if(timeLeft<=0){clearInterval(timerId);gameOver()}},1000)
 }
 function renderTimer(id){const el=document.getElementById(id);if(!el)return;el.textContent=`${String(Math.floor(timeLeft/60)).padStart(2,"0")}:${String(timeLeft%60).padStart(2,"0")}`;el.classList.toggle("danger",timeLeft<=10)}
+
 async function startGame(){
  clearInterval(timerId);
- state={usedL1:new Set(),selectedBrands:[],mistakes:0,l1Set:null,matches:{},l2SelectedLogo:null,l2Matched:new Set(),priceItems:[],order:[],l3Mistakes:0};
+ state={usedL1:new Set(),selectedBrands:[],mistakes:0,l1Set:null,l2SelectedLogo:null,l2SelectedMenu:null,l2Matched:new Set(),l2Logos:[],l2Menus:[],priceItems:[],order:[],l3Mistakes:0};
  if(USE_LIVE_SHEET) await tryLoadSheet();
  startLevel1();
 }
+
 async function tryLoadSheet(){
  try{
   const url=`https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?gid=${SHEET_GID}&tqx=out:json`;
@@ -165,9 +175,11 @@ async function tryLoadSheet(){
   }
  }catch(e){console.warn("Live Sheet load failed; using embedded data.",e)}
 }
+
 function startLevel1(){
  state.mistakes=0;state.usedL1.clear();state.selectedBrands=[];show("level1");nextL1();
 }
+
 function nextL1(){
  const available=data.map((_,i)=>i).filter(i=>!state.usedL1.has(i));
  if(available.length<1)return gameOver();
@@ -179,6 +191,7 @@ function nextL1(){
  document.getElementById("l1cards").innerHTML=cards.map((c,n)=>`<button class="choice" onclick="answerL1(${c.real},this)"><img src="${c.url}" alt="Logo ${n+1}"><div class="label"></div></button>`).join("");
  if(!timerId||timeLeft<=0)resetTimer("timer1"); else renderTimer("timer1");
 }
+
 function answerL1(isReal,btn){
  const all=document.querySelectorAll("#l1cards .choice");all.forEach(x=>x.disabled=true);
  if(isReal){
@@ -191,69 +204,99 @@ function answerL1(isReal,btn){
   if(state.mistakes>=2)setTimeout(gameOver,500); else setTimeout(nextL1,500);
  }
 }
+
+/* --- LEVEL 2 LOGIC (ปรับแก้ใหม่ให้อิสระมากขึ้น) --- */
 function startLevel2(){
  clearInterval(timerId);
  state.mistakes = 0;
  state.l2Matched = new Set();
- state.matches = {};
  state.l2SelectedLogo = null;
+ state.l2SelectedMenu = null;
  
- // 🛠️ ล้างข้อความแจ้งเตือนเดิมให้ว่างเปล่าตอนเริ่มด่าน
+ const selected = state.selectedBrands.map(i => data[i]);
+ state.l2Logos = shuffle(selected.map((r, i) => ({i, url: r.realLogo})));
+ state.l2Menus = shuffle(selected.map((r, i) => ({i, url: r.menu})));
+ 
  const feedback = document.getElementById("l2feedback");
  if(feedback) feedback.textContent = "";
  
  show("level2");
- buildLevel2();
+ renderLevel2();
  resetTimer("timer2");
 }
-function buildLevel2(){
- const selected=state.selectedBrands.map(i=>data[i]);
- // Three logo identities and three menu cards; index pairing is the answer.
- const logos=shuffle(selected.map((r,i)=>({i,url:r.realLogo})));
- const menus=shuffle(selected.map((r,i)=>({i,url:r.menu})));
- document.getElementById("l2progress").textContent=`จับคู่แล้ว ${state.l2Matched.size} / 3 • ผิด ${state.mistakes} / 1`;
- document.getElementById("matchGrid").innerHTML=`
- <div><div class="match-title">แบรนด์</div><div class="match-side">${logos.map(x=>`<button class="match-card ${state.l2Matched.has(x.i)?"matched":""}" data-logo="${x.i}" onclick="selectLogo(${x.i},this)"><img src="${x.url}"></button>`).join("")}</div></div>
- <div><div class="match-title">สินค้า</div><div class="match-side">${menus.map(x=>`<button class="match-card ${state.l2Matched.has(x.i)?"matched":""}" data-menu="${x.i}" onclick="selectMenu(${x.i},this)"><img src="${x.url}"></button>`).join("")}</div></div>
- <div style="display:flex;align-items:center;justify-content:center;text-align:center;color:#60477b;font-weight:bold"></div>`;
+
+function renderLevel2(){
+ document.getElementById("l2progress").textContent = `จับคู่แล้ว ${state.l2Matched.size} / 3 • ผิด ${state.mistakes} / 1`;
+ 
+ const logoHTML = state.l2Logos.map(x => {
+  const isMatched = state.l2Matched.has(x.i);
+  const isSelected = state.l2SelectedLogo === x.i;
+  return `<button class="match-card ${isMatched ? "matched" : ""} ${isSelected ? "selected" : ""}" onclick="selectLogo(${x.i})"><img src="${x.url}"></button>`;
+ }).join("");
+ 
+ const menuHTML = state.l2Menus.map(x => {
+  const isMatched = state.l2Matched.has(x.i);
+  const isSelected = state.l2SelectedMenu === x.i;
+  return `<button class="match-card ${isMatched ? "matched" : ""} ${isSelected ? "selected" : ""}" onclick="selectMenu(${x.i})"><img src="${x.url}"></button>`;
+ }).join("");
+ 
+ document.getElementById("matchGrid").innerHTML = `
+ <div><div class="match-title">แบรนด์</div><div class="match-side">${logoHTML}</div></div>
+ <div><div class="match-title">สินค้า</div><div class="match-side">${menuHTML}</div></div>`;
 }
-function selectLogo(i,el){if(state.l2Matched.has(i))return;document.querySelectorAll('[data-logo]').forEach(x=>x.classList.remove("selected"));state.l2SelectedLogo=i;el.classList.add("selected")}
-function selectMenu(i,el){
- if(state.l2SelectedLogo===null||state.l2Matched.has(i))return;
- if(i===state.l2SelectedLogo){
-  state.l2Matched.add(i);
-  
-  // ลบกรอบไฮไลต์การเลือกเดิม และใส่สถานะ matched ให้กับการ์ดทั้งสองใบโดยไม่สลับตำแหน่ง
-  const logoCard = document.querySelector(`[data-logo="${i}"]`);
-  if(logoCard) { logoCard.classList.remove("selected"); logoCard.classList.add("matched"); }
-  if(el) { el.classList.add("matched"); }
-  
-  state.l2SelectedLogo = null;
-  document.getElementById("l2feedback").textContent = "✨ จับคู่ถูกต้อง!";
-  document.getElementById("l2progress").textContent = `จับคู่แล้ว ${state.l2Matched.size} / 3 • ผิด ${state.mistakes} / 1`;
-  
-  if(state.l2Matched.size === 3) setTimeout(startLevel3, 500);
- }else{
-  state.mistakes++;
-  state.l2SelectedLogo = null;
-  document.querySelectorAll('[data-logo]').forEach(x => x.classList.remove("selected"));
-  document.getElementById("l2progress").textContent = `จับคู่แล้ว ${state.l2Matched.size} / 3 • ผิด ${state.mistakes} / 1`;
-  document.getElementById("l2feedback").textContent = "❌ จับคู่ผิด — ลองใหม่อีกครั้ง";
-  
-  if(state.mistakes >= 2) setTimeout(gameOver, 500);
+
+function selectLogo(i){
+ if(state.l2Matched.has(i)) return;
+ if(state.l2SelectedMenu !== null){
+  checkL2Match(i, state.l2SelectedMenu);
+ } else {
+  state.l2SelectedLogo = (state.l2SelectedLogo === i) ? null : i;
+  renderLevel2();
  }
 }
+
+function selectMenu(i){
+ if(state.l2Matched.has(i)) return;
+ if(state.l2SelectedLogo !== null){
+  checkL2Match(state.l2SelectedLogo, i);
+ } else {
+  state.l2SelectedMenu = (state.l2SelectedMenu === i) ? null : i;
+  renderLevel2();
+ }
+}
+
+function checkL2Match(logoIdx, menuIdx){
+ if(logoIdx === menuIdx){
+  state.l2Matched.add(logoIdx);
+  state.l2SelectedLogo = null;
+  state.l2SelectedMenu = null;
+  document.getElementById("l2feedback").textContent = "✨ จับคู่ถูกต้อง!";
+  renderLevel2();
+  if(state.l2Matched.size === 3){
+   setTimeout(startLevel3, 500);
+  }
+ } else {
+  state.mistakes++;
+  state.l2SelectedLogo = null;
+  state.l2SelectedMenu = null;
+  document.getElementById("l2feedback").textContent = "❌ จับคู่ผิด — ลองใหม่อีกครั้ง";
+  renderLevel2();
+  if(state.mistakes >= 2){
+   setTimeout(gameOver, 500);
+  }
+ }
+}
+
+/* --- LEVEL 3 LOGIC --- */
 function startLevel3(){
  clearInterval(timerId);
  state.l3Mistakes = 0;
  state.priceItems = shuffle(state.selectedBrands.map(i => ({idx: i, ...data[i], revealed: false})));
  state.order = [null, null, null];
  
- // 🛠️ ล้างข้อความแจ้งเตือนเดิมให้ว่างเปล่าตอนเริ่มด่าน
  const feedback = document.getElementById("l3feedback");
  if(feedback) feedback.textContent = "";
  
- // รีเซ็ตปุ่มให้กลับมาเป็นปุ่ม "ตรวจสอบ 🔮"
  const btn = document.getElementById("checkBtn");
  if(btn) {
   btn.textContent = "ตรวจสอบ 🔮";
@@ -267,7 +310,6 @@ function startLevel3(){
 }
 
 function buildLevel3(){
- // วาดการ์ดอาหารด้านบน
  document.getElementById("priceItems").innerHTML = state.priceItems.map((x, i) => {
   const isPlaced = state.order.includes(i);
   return `
@@ -283,7 +325,6 @@ function buildLevel3(){
   </div>`;
  }).join("");
 
- // วาดช่องวาง (Dropzone)
  document.getElementById("dropzones").innerHTML = state.order.map((item, slot) => `
  <div class="dropzone" 
       data-slot="${slot}" 
@@ -301,50 +342,29 @@ function buildLevel3(){
  </div>`).join("");
 }
 
-// System Drag & Drop (สำหรับคอมพิวเตอร์)
-function allowDrop(e) {
- e.preventDefault();
- e.currentTarget.classList.add('over');
-}
-
-function dragLeave(e) {
- e.currentTarget.classList.remove('over');
-}
-
-function dragStart(e, i) {
- e.dataTransfer.setData("text/plain", i);
-}
-
+function allowDrop(e) { e.preventDefault(); e.currentTarget.classList.add('over'); }
+function dragLeave(e) { e.currentTarget.classList.remove('over'); }
+function dragStart(e, i) { e.dataTransfer.setData("text/plain", i); }
 function dropFood(e, slot) {
  e.preventDefault();
  e.currentTarget.classList.remove('over');
  const i = Number(e.dataTransfer.getData("text/plain"));
- if (!isNaN(i)) {
-  placeFood(i, slot);
- }
+ if (!isNaN(i)) placeFood(i, slot);
 }
-
-// System Tap/Click (สำหรับมือถือ หรือคนถนัดกดเลือก)
 function clickFoodCard(i) {
  if (state.order.includes(i)) return;
  const emptySlot = state.order.findIndex(x => x === null);
- if (emptySlot >= 0) {
-  placeFood(i, emptySlot);
- }
+ if (emptySlot >= 0) placeFood(i, emptySlot);
 }
-
 function clickDropzone(slot) {
  if (state.order[slot] !== null) {
-  state.order[slot] = null; // ถอดรูปออก คืนค่ากลับไปด้านบน
+  state.order[slot] = null;
   buildLevel3();
  }
 }
-
 function placeFood(i, slot) {
  const existingIndex = state.order.indexOf(i);
- if (existingIndex >= 0) {
-  state.order[existingIndex] = null;
- }
+ if (existingIndex >= 0) state.order[existingIndex] = null;
  state.order[slot] = i;
  buildLevel3();
 }
