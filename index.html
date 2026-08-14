@@ -183,7 +183,7 @@ function answerL1(isReal,btn){
  const all=document.querySelectorAll("#l1cards .choice");all.forEach(x=>x.disabled=true);
  if(isReal){
   btn.classList.add("correct");state.selectedBrands.push(state.l1Set);
-  document.getElementById("l1feedback").textContent="✨ ถูกต้อง! เวทมนตร์ทำงานแล้ว";
+  document.getElementById("l1feedback").textContent="✨ ถูกต้อง!";
   setTimeout(()=>{if(state.selectedBrands.length>=3)startLevel2();else nextL1()},500);
  }else{
   btn.classList.add("wrong");state.mistakes++;
