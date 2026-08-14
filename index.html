@@ -192,8 +192,19 @@ function answerL1(isReal,btn){
  }
 }
 function startLevel2(){
- clearInterval(timerId);state.mistakes=0;state.l2Matched=new Set();state.matches={};state.l2SelectedLogo=null;
- show("level2");buildLevel2();resetTimer("timer2");
+ clearInterval(timerId);
+ state.mistakes = 0;
+ state.l2Matched = new Set();
+ state.matches = {};
+ state.l2SelectedLogo = null;
+ 
+ // 🛠️ ล้างข้อความแจ้งเตือนเดิมให้ว่างเปล่าตอนเริ่มด่าน
+ const feedback = document.getElementById("l2feedback");
+ if(feedback) feedback.textContent = "";
+ 
+ show("level2");
+ buildLevel2();
+ resetTimer("timer2");
 }
 function buildLevel2(){
  const selected=state.selectedBrands.map(i=>data[i]);
@@ -238,6 +249,11 @@ function startLevel3(){
  state.priceItems = shuffle(state.selectedBrands.map(i => ({idx: i, ...data[i], revealed: false})));
  state.order = [null, null, null];
  
+ // 🛠️ ล้างข้อความแจ้งเตือนเดิมให้ว่างเปล่าตอนเริ่มด่าน
+ const feedback = document.getElementById("l3feedback");
+ if(feedback) feedback.textContent = "";
+ 
+ // รีเซ็ตปุ่มให้กลับมาเป็นปุ่ม "ตรวจสอบ 🔮"
  const btn = document.getElementById("checkBtn");
  if(btn) {
   btn.textContent = "ตรวจสอบ 🔮";
