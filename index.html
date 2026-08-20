@@ -38,31 +38,34 @@ button{font:inherit;border:0;cursor:pointer;touch-action:manipulation}
 .choice.wrong{border-color:var(--red);background:#fff0ee}
 .feedback{text-align:center;min-height:28px;font-weight:bold;margin:12px 0}
 
-.match-grid{display:flex;flex-direction:column;gap:24px;max-width:800px;margin:0 auto}
-.match-side{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-.match-card{background:#fff;border:3px solid #dcc89d;border-radius:18px;padding:10px;min-height:140px;display:flex;align-items:center;justify-content:center;transition:all 0.15s ease}
-.match-card img{width:100%;height:120px;object-fit:contain;pointer-events:none}
+/* Level 2 & 3 Layout (รองรับ 4 ชิ้น) */
+.match-grid{display:flex;flex-direction:column;gap:24px;max-width:900px;margin:0 auto}
+.match-side{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.match-card{background:#fff;border:3px solid #dcc89d;border-radius:18px;padding:8px;min-height:130px;display:flex;align-items:center;justify-content:center;transition:all 0.15s ease}
+.match-card img{width:100%;height:110px;object-fit:contain;pointer-events:none}
 .match-card.selected{border-color:var(--purple);box-shadow:0 0 0 4px #60477b33;transform:scale(1.02)}
 .match-card.matched{border-color:var(--green);background:#eff8f0;opacity:0.65;pointer-events:none}
 .match-title{text-align:center;font-weight:bold;color:var(--purple);margin-bottom:8px}
 
-.price-items{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:20px}
-.food-card{background:white;border:3px solid #dcc89d;border-radius:18px;padding:10px;cursor:grab;user-select:none;touch-action:none}
-.food-card img{width:100%;height:170px;object-fit:contain;pointer-events:none}
-.info{text-align:center;font-size:14px;color:#6c594d;min-height:20px}
-.dropzone-wrap{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
-.dropzone{min-height:150px;border:3px dashed #c7aa69;border-radius:18px;background:#fffaf0;display:flex;align-items:center;justify-content:center;padding:8px;position:relative}
+.price-items{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
+.food-card{background:white;border:3px solid #dcc89d;border-radius:18px;padding:8px;cursor:grab;user-select:none;touch-action:none}
+.food-card img{width:100%;height:140px;object-fit:contain;pointer-events:none}
+.info{text-align:center;font-size:13px;color:#6c594d;min-height:18px}
+.dropzone-wrap{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.dropzone{min-height:140px;border:3px dashed #c7aa69;border-radius:18px;background:#fffaf0;display:flex;align-items:center;justify-content:center;padding:6px;position:relative}
 .dropzone.over{background:#f3ead8;border-color:var(--purple)}
-.dropzone .num{position:absolute;top:5px;left:8px;font-weight:bold;color:#876c36}
-.dropzone img{max-width:100%;max-height:130px;object-fit:contain;pointer-events:none}
-.price-reveal{font-weight:bold;text-align:center;color:var(--purple);margin-top:4px}
+.dropzone .num{position:absolute;top:4px;left:6px;font-weight:bold;color:#876c36;font-size:14px}
+.dropzone img{max-width:100%;max-height:110px;object-fit:contain;pointer-events:none}
+.price-reveal{font-weight:bold;text-align:center;color:var(--purple);margin-top:2px;font-size:14px}
 .order-note{text-align:center;font-weight:bold;margin:10px 0 18px;color:#60477b}
 .win-icon{font-size:80px;text-align:center}
+
 @media(max-width:650px){
  .panel{padding:20px 14px;border-radius:20px}
  .cards{gap:10px}.choice{min-height:160px;padding:7px}.choice img{height:135px}
- .match-side{gap:8px}.match-card{min-height:100px;padding:6px}.match-card img{height:80px}
- .price-items,.dropzone-wrap{gap:8px}.food-card img{height:120px}.dropzone{min-height:115px}
+ .match-side,.price-items,.dropzone-wrap{grid-template-columns:repeat(2,1fr);gap:8px}
+ .match-card{min-height:95px;padding:5px}.match-card img{height:75px}
+ .food-card img{height:100px}.dropzone{min-height:100px}
  .topbar{align-items:flex-start}.timer{font-size:19px;min-width:82px}
 }
 </style>
@@ -76,19 +79,19 @@ button{font:inherit;border:0;cursor:pointer;touch-action:manipulation}
 </div></section>
 
 <section id="level1" class="screen"><div class="panel">
-<div class="topbar"><span class="level-tag">LEVEL 1</span><span id="timer1" class="timer">01:00</span></div>
+<div class="topbar"><span class="level-tag">LEVEL 1</span><span id="timer1" class="timer">01:05</span></div>
 <h2>real or cake</h2><p class="subtitle">จริง หรือ เค้ก?</p>
 <div id="l1progress" class="progress"></div><div id="l1cards" class="cards"></div><div id="l1feedback" class="feedback"></div>
 </div></section>
 
 <section id="level2" class="screen"><div class="panel">
-<div class="topbar"><span class="level-tag">LEVEL 2</span><span id="timer2" class="timer">01:00</span></div>
+<div class="topbar"><span class="level-tag">LEVEL 2</span><span id="timer2" class="timer">01:05</span></div>
 <h2>แบรนด์ของฉัน สินค้าของใคร</h2><p class="subtitle">จับคู่แบรนด์และสินค้าให้ถูกต้อง</p>
 <div id="l2progress" class="progress"></div><div id="matchGrid" class="match-grid"></div><div id="l2feedback" class="feedback"></div>
 </div></section>
 
 <section id="level3" class="screen"><div class="panel">
-<div class="topbar"><span class="level-tag">LEVEL 3</span><span id="timer3" class="timer">01:00</span></div>
+<div class="topbar"><span class="level-tag">LEVEL 3</span><span id="timer3" class="timer">01:05</span></div>
 <h2>พาราเท่าไหร่คะ</h2><p class="order-note">เรียงจากราคาน้อย → มาก</p>
 <div id="priceItems" class="price-items"></div><div id="dropzones" class="dropzone-wrap"></div>
 <div id="l3feedback" class="feedback"></div><button id="checkBtn" class="magic-btn" onclick="checkLevel3()">ตรวจสอบ 🔮</button>
@@ -106,14 +109,14 @@ button{font:inherit;border:0;cursor:pointer;touch-action:manipulation}
 
 <script>
 const DATA = [
-  {"type":"Phone","brand":"Apple","realLogo":"https://drive.google.com/thumbnail?id=1j41o2JvIkdQEOCpcntDwC0B4xYp6bIBJ&sz=w1000","fakeLogo":"https://drive.google.com/thumbnail?id=1-s5wYE6PFbA5jf3tcQbbJ9T7yD74q8kX&sz=w1000","menu":"https://drive.google.com/thumbnail?id=1XnS_M7FwKf7L7ejDoQa792p2fTi0ESso&sz=w1000","price":"43900","info":"starting price"},
-  {"type":"Phone","brand":"Samsung","realLogo":"https://drive.google.com/thumbnail?id=1bSOPJyrtVUhp0y1snPJf5OpUU1MpMTLQ&sz=w1000","fakeLogo":"https://drive.google.com/thumbnail?id=1dNXzkNHiHqzEQz9redNXePfZmRq8i3-f&sz=w1000","menu":"https://drive.google.com/thumbnail?id=1iwBcyaddYxt6ZHWBpXtCw87j8mmkceu7&sz=w1000","price":"49900","info":"S26 512 gb"},
-  {"type":"Phone","brand":"Huiwei","realLogo":"https://drive.google.com/thumbnail?id=1lXTRPipI70-3fMQzzLDe13At4055v-7s&sz=w1000","fakeLogo":"https://drive.google.com/thumbnail?id=1uI0M8MCL8jKac62GeJrW4lOFmgFXWeH7&sz=w1000","menu":"https://drive.google.com/thumbnail?id=1aM9SRxlf0iow2yqaRobZqQKwV7mrL622&sz=w1000","price":"14000","info":""},
-  {"type":"Phone","brand":"Oppo","realLogo":"https://drive.google.com/thumbnail?id=11pxe_8lJEc4wUd_nTPsGKB1ZN7xz5tYr&sz=w1000","fakeLogo":"https://drive.google.com/thumbnail?id=1xDfz_9caT4a8655xt89hfVgbNVJH0tD5&sz=w1000","menu":"https://drive.google.com/thumbnail?id=1BTjmMecq9YYv4emBh30FsG1vik-Hfvwz&sz=w1000","price":"9999","info":""},
-  {"type":"Car","brand":"Volvo","realLogo":"https://drive.google.com/thumbnail?id=1Y-x5uTvLrkDLrBErUPjnov6TD9kdR4ys&sz=w1000","fakeLogo":"https://drive.google.com/thumbnail?id=1-L5UFhmbpQdnK_qLQmTR-hoiZjtvdwJt&sz=w1000","menu":"https://drive.google.com/thumbnail?id=1dlCmoXBKc2mKwxYf8BgkoY5OuStrmYNg&sz=w1000","price":"฿4.7M","info":""},
-  {"type":"Car","brand":"BMW","realLogo":"https://drive.google.com/thumbnail?id=1Uozp6XpCFzMxbTtM2rJkpnxdqUqtcCJM&sz=w1000","fakeLogo":"https://drive.google.com/thumbnail?id=1bwxASm1OHc4RkVM5E5LhubtubrOPLEin&sz=w1000","menu":"https://drive.google.com/thumbnail?id=14AAaO1LZ50u4_Kdd_1Z3gXlKoBeNB6Kd&sz=w1000","price":"฿2.2M","info":""},
+  {"type":"Phone","brand":"Apple","realLogo":"https://drive.google.com/thumbnail?id=1j41o2JvIkdQEOCpcntDwC0B4xYp6bIBJ&sz=w1000","fakeLogo":"https://drive.google.com/thumbnail?id=1-s5wYE6PFbA5jf3tcQbbJ9T7yD74q8kX&sz=w1000","menu":"https://drive.google.com/thumbnail?id=1XnS_M7FwKf7L7ejDoQa792p2fTi0ESso&sz=w1000","price":"43,900","info":"starting price"},
+  {"type":"Phone","brand":"Samsung","realLogo":"https://drive.google.com/thumbnail?id=1bSOPJyrtVUhp0y1snPJf5OpUU1MpMTLQ&sz=w1000","fakeLogo":"https://drive.google.com/thumbnail?id=1dNXzkNHiHqzEQz9redNXePfZmRq8i3-f&sz=w1000","menu":"https://drive.google.com/thumbnail?id=1iwBcyaddYxt6ZHWBpXtCw87j8mmkceu7&sz=w1000","price":"49,900","info":"S26 512 gb"},
+  {"type":"Phone","brand":"Huiwei","realLogo":"https://drive.google.com/thumbnail?id=1lXTRPipI70-3fMQzzLDe13At4055v-7s&sz=w1000","fakeLogo":"https://drive.google.com/thumbnail?id=1uI0M8MCL8jKac62GeJrW4lOFmgFXWeH7&sz=w1000","menu":"https://drive.google.com/thumbnail?id=1aM9SRxlf0iow2yqaRobZqQKwV7mrL622&sz=w1000","price":"14,000","info":""},
+  {"type":"Phone","brand":"Oppo","realLogo":"https://drive.google.com/thumbnail?id=11pxe_8lJEc4wUd_nTPsGKB1ZN7xz5tYr&sz=w1000","fakeLogo":"https://drive.google.com/thumbnail?id=1xDfz_9caT4a8655xt89hfVgbNVJH0tD5&sz=w1000","menu":"https://drive.google.com/thumbnail?id=1BTjmMecq9YYv4emBh30FsG1vik-Hfvwz&sz=w1000","price":"9,999","info":""},
+  {"type":"Car","brand":"Volvo","realLogo":"https://drive.google.com/thumbnail?id=1Y-x5uTvLrkDLrBErUPjnov6TD9kdR4ys&sz=w1000","fakeLogo":"https://drive.google.com/thumbnail?id=1-L5UFhmbpQdnK_qLQmTR-hoiZjtvdwJt&sz=w1000","menu":"https://drive.google.com/thumbnail?id=1dlCmoXBKc2mKwxYf8BgkoY5OuStrmYNg&sz=w1000","price":"4.7M","info":""},
+  {"type":"Car","brand":"BMW","realLogo":"https://drive.google.com/thumbnail?id=1Uozp6XpCFzMxbTtM2rJkpnxdqUqtcCJM&sz=w1000","fakeLogo":"https://drive.google.com/thumbnail?id=1bwxASm1OHc4RkVM5E5LhubtubrOPLEin&sz=w1000","menu":"https://drive.google.com/thumbnail?id=14AAaO1LZ50u4_Kdd_1Z3gXlKoBeNB6Kd&sz=w1000","price":"2.2M","info":""},
   {"type":"Car","brand":"Benz","realLogo":"https://drive.google.com/thumbnail?id=1PlqTxT9qeLvYTTA7GwcrrPsB3fhNTrxW&sz=w1000","fakeLogo":"https://drive.google.com/thumbnail?id=1auq6kWHe0hczWExc-ui1u8af1vrJRT0i&sz=w1000","menu":"https://drive.google.com/thumbnail?id=1YtzsTr3Snm0CKt2cYWP7PyUbiJg6Api7&sz=w1000","price":"12M","info":""},
-  {"type":"Car","brand":"Tesla","realLogo":"https://drive.google.com/thumbnail?id=1KHa9DUWzHW1AVAP_Nz5s8yVlnihdvGvA&sz=w1000","fakeLogo":"https://drive.google.com/thumbnail?id=13d9bAPpRRn1tk9VcypCeJcHuLtzlWwcL&sz=w1000","menu":"https://drive.google.com/thumbnail?id=1ydW34vQOUJ0HR5IgYZUu8gfPQVEe8DT6&sz=w1000","price":"1149000","info":""},
+  {"type":"Car","brand":"Tesla","realLogo":"https://drive.google.com/thumbnail?id=1KHa9DUWzHW1AVAP_Nz5s8yVlnihdvGvA&sz=w1000","fakeLogo":"https://drive.google.com/thumbnail?id=13d9bAPpRRn1tk9VcypCeJcHuLtzlWwcL&sz=w1000","menu":"https://drive.google.com/thumbnail?id=1ydW34vQOUJ0HR5IgYZUu8gfPQVEe8DT6&sz=w1000","price":"1.3M","info":""},
   {"type":"Pizza","brand":"Domino","realLogo":"https://drive.google.com/thumbnail?id=1_ExSdSMtwvTm6wL7wPaVwALSmZTL0IyQ&sz=w1000","fakeLogo":"https://drive.google.com/thumbnail?id=1zTM5trnDKN6VrRT33c0QhYMNHvoFnoh9&sz=w1000","menu":"https://drive.google.com/thumbnail?id=1QjY2Y7YdI5Mrf_g4ZCGY1qRt7Z1Aocyq&sz=w1000","price":"259","info":"size L"},
   {"type":"Pizza","brand":"Pizza Company","realLogo":"https://drive.google.com/thumbnail?id=1HHsWpXstSj79e_0Eu5SF5jgsUD3PMirl&sz=w1000","fakeLogo":"https://drive.google.com/thumbnail?id=1X0cR3SH-mRlyf-Ym0OFBLXingNWzQLlJ&sz=w1000","menu":"https://drive.google.com/thumbnail?id=1aVIqB5qw0rKG_BG1QOTPLxqsEgTf6IK7&sz=w1000","price":"129","info":""},
   {"type":"Pizza","brand":"Pizza Hut","realLogo":"https://drive.google.com/thumbnail?id=1zxTXf6bhrzzrR5kyq6RcvwbUqBWKcFg6&sz=w1000","fakeLogo":"https://drive.google.com/thumbnail?id=17bzNZTb8-3-xO7u0yNgumc0EYUY6HsOS&sz=w1000","menu":"https://drive.google.com/thumbnail?id=11gRXh5t9PqKhVCOrvJhSFy_nOuI9W9we&sz=w1000","price":"169","info":""},
@@ -126,21 +129,21 @@ const DATA = [
   {"type":"Ice-cream","brand":"Swensens","realLogo":"https://drive.google.com/thumbnail?id=1suAIlnB35jURvRd2MjgHtHggwtJWoAiB&sz=w1000","fakeLogo":"https://drive.google.com/thumbnail?id=1JtIQ70e-qr2iYEG7Cy7bPySO_MPNiUuz&sz=w1000","menu":"https://drive.google.com/thumbnail?id=14G2oIgg36uulx60DLtD3Nqj0KjJtKcYq&sz=w1000","price":"88","info":""},
   {"type":"Ice-cream","brand":"Parameter","realLogo":"https://drive.google.com/thumbnail?id=1vKiSnRe8AXTTU6tv76GkAsky8KIUxz9H&sz=w1000","fakeLogo":"https://drive.google.com/thumbnail?id=1NSuakYnuGv1s0CCi7457SakaeqU4WD32&sz=w1000","menu":"https://drive.google.com/thumbnail?id=1GV2WZx5-3g9EL4DbcR5OglnF8xniRkzo&sz=w1000","price":"299","info":""},
   {"type":"Ice-cream","brand":"Molto","realLogo":"https://drive.google.com/thumbnail?id=1xU7oVhdbPAqKBSb8IUGbd72CODPgyNvp&sz=w1000","fakeLogo":"https://drive.google.com/thumbnail?id=19DKU5RblntuqjkTxXbg0nWOjcr1yyMCY&sz=w1000","menu":"https://drive.google.com/thumbnail?id=1HWgWBOo6SPW7Z4inbVe7pgD8YWm_qfds&sz=w1000","price":"105","info":"40 oz normal"},
-  {"type":"Shoes","brand":"NB","realLogo":"https://drive.google.com/thumbnail?id=15HRT8-Qz60AeegXbySXhnl8TnHR-3yPd&sz=w1000","fakeLogo":"https://drive.google.com/thumbnail?id=1QQ8mLaO2KRod7h0iHftLauc76vWNuXK8&sz=w1000","menu":"https://drive.google.com/thumbnail?id=1nKgr_QjTM88bYB6z6A8G4DHRlnA_qL_y&sz=w1000","price":"3900","info":""},
-  {"type":"Shoes","brand":"Under Armour","realLogo":"https://drive.google.com/thumbnail?id=1ygcMJqjm6s8PZ-9azN1yCNTyEhd2n7mw&sz=w1000","fakeLogo":"https://drive.google.com/thumbnail?id=1zmWqn79Zm4rwT8urAeKoHIEhXViL13MV&sz=w1000","menu":"https://drive.google.com/thumbnail?id=1HJZ3HaHesD1UkI01xgTro6IsK7bwbD6W&sz=w1000","price":"1393","info":""},
-  {"type":"Shoes","brand":"Fila","realLogo":"https://drive.google.com/thumbnail?id=1Dm5UXj9lQr_c9c4sdlJhHG1Enhp56sz2&sz=w1000","fakeLogo":"https://drive.google.com/thumbnail?id=1qLugEuZzMOySeat9RZfYVCUsS_kMCLGc&sz=w1000","menu":"https://drive.google.com/thumbnail?id=1xmOB4FRwCIPb3_46IwY0XOfnIjfVs4og&sz=w1000","price":"5520","info":""},
-  {"type":"Shoes","brand":"Adidas","realLogo":"https://drive.google.com/thumbnail?id=1Tu4r4JjhfYd8rraFhDdpRZJaMKxI3X1M&sz=w1000","fakeLogo":"https://drive.google.com/thumbnail?id=1Xeif44jqzn3rAWe3vQL3VUz4ucMyQKkf&sz=w1000","menu":"https://drive.google.com/thumbnail?id=1wrBGJjt1vS2xGgQAODY-EAHtQohWSslG&sz=w1000","price":"4000","info":""},
-  {"type":"Jewelry","brand":"Pandora","realLogo":"https://drive.google.com/thumbnail?id=1vavb8aAq9Myw8Y3169JLnsZyYxwXBKiw&sz=w1000","fakeLogo":"https://drive.google.com/thumbnail?id=1Jk48pdUNp6Xsyb4q76vj8kGZY0zaVXKF&sz=w1000","menu":"https://drive.google.com/thumbnail?id=1UXUj9TLSneFpqtO4axOFuSgDqi2D2cWo&sz=w1000","price":"3087","info":""},
-  {"type":"Jewelry","brand":"Pipatchara","realLogo":"https://drive.google.com/thumbnail?id=1dKq6bVrqlflc5Q7BC5yLIGKf735k9PYJ&sz=w1000","fakeLogo":"https://drive.google.com/thumbnail?id=1wcme4tcEAqUH55Z1Wii46aaBiFrVirF5&sz=w1000","menu":"https://drive.google.com/thumbnail?id=1lbUr-5bX8hSZlc2L8pCMJibFApAkMu5S&sz=w1000","price":"3364","info":""},
-  {"type":"Jewelry","brand":"Ravipa","realLogo":"https://drive.google.com/thumbnail?id=10g2vKpMpUKAs7taq0_ds_WGQ7bnxPYw0&sz=w1000","fakeLogo":"https://drive.google.com/thumbnail?id=1mIHZtJKm0vi_coDdUn1O1vOV1N-ia2x4&sz=w1000","menu":"https://drive.google.com/thumbnail?id=1p9w7eT8VKPRw3EJYyhm67Jfz4rojVs8C&sz=w1000","price":"3190","info":""},
-  {"type":"Jewelry","brand":"vivienne Westwood","realLogo":"https://drive.google.com/thumbnail?id=1QRTHLvAJq39yiWa399SzIYtlqI6g2ORm&sz=w1000","fakeLogo":"https://drive.google.com/thumbnail?id=1G3z95jH_jIb2p8ledvAfexgctgq8-VNq&sz=w1000","menu":"https://drive.google.com/thumbnail?id=159tc_zNnPVXWh9R0ebtf5-6PRn2xOWIB&sz=w1000","price":"6500","info":""},
+  {"type":"Shoes","brand":"NB","realLogo":"https://drive.google.com/thumbnail?id=15HRT8-Qz60AeegXbySXhnl8TnHR-3yPd&sz=w1000","fakeLogo":"https://drive.google.com/thumbnail?id=1QQ8mLaO2KRod7h0iHftLauc76vWNuXK8&sz=w1000","menu":"https://drive.google.com/thumbnail?id=1nKgr_QjTM88bYB6z6A8G4DHRlnA_qL_y&sz=w1000","price":"3,900","info":""},
+  {"type":"Shoes","brand":"Under Armour","realLogo":"https://drive.google.com/thumbnail?id=1ygcMJqjm6s8PZ-9azN1yCNTyEhd2n7mw&sz=w1000","fakeLogo":"https://drive.google.com/thumbnail?id=1zmWqn79Zm4rwT8urAeKoHIEhXViL13MV&sz=w1000","menu":"https://drive.google.com/thumbnail?id=1HJZ3HaHesD1UkI01xgTro6IsK7bwbD6W&sz=w1000","price":"1,393","info":""},
+  {"type":"Shoes","brand":"Fila","realLogo":"https://drive.google.com/thumbnail?id=1Dm5UXj9lQr_c9c4sdlJhHG1Enhp56sz2&sz=w1000","fakeLogo":"https://drive.google.com/thumbnail?id=1qLugEuZzMOySeat9RZfYVCUsS_kMCLGc&sz=w1000","menu":"https://drive.google.com/thumbnail?id=1xmOB4FRwCIPb3_46IwY0XOfnIjfVs4og&sz=w1000","price":"5,520","info":""},
+  {"type":"Shoes","brand":"Adidas","realLogo":"https://drive.google.com/thumbnail?id=1Tu4r4JjhfYd8rraFhDdpRZJaMKxI3X1M&sz=w1000","fakeLogo":"https://drive.google.com/thumbnail?id=1Xeif44jqzn3rAWe3vQL3VUz4ucMyQKkf&sz=w1000","menu":"https://drive.google.com/thumbnail?id=1wrBGJjt1vS2xGgQAODY-EAHtQohWSslG&sz=w1000","price":"4,000","info":""},
+  {"type":"Jewelry","brand":"Pandora","realLogo":"https://drive.google.com/thumbnail?id=1vavb8aAq9Myw8Y3169JLnsZyYxwXBKiw&sz=w1000","fakeLogo":"https://drive.google.com/thumbnail?id=1Jk48pdUNp6Xsyb4q76vj8kGZY0zaVXKF&sz=w1000","menu":"https://drive.google.com/thumbnail?id=1UXUj9TLSneFpqtO4axOFuSgDqi2D2cWo&sz=w1000","price":"3,087","info":""},
+  {"type":"Jewelry","brand":"Pipatchara","realLogo":"https://drive.google.com/thumbnail?id=1dKq6bVrqlflc5Q7BC5yLIGKf735k9PYJ&sz=w1000","fakeLogo":"https://drive.google.com/thumbnail?id=1wcme4tcEAqUH55Z1Wii46aaBiFrVirF5&sz=w1000","menu":"https://drive.google.com/thumbnail?id=1lbUr-5bX8hSZlc2L8pCMJibFApAkMu5S&sz=w1000","price":"3,364","info":""},
+  {"type":"Jewelry","brand":"Ravipa","realLogo":"https://drive.google.com/thumbnail?id=10g2vKpMpUKAs7taq0_ds_WGQ7bnxPYw0&sz=w1000","fakeLogo":"https://drive.google.com/thumbnail?id=1mIHZtJKm0vi_coDdUn1O1vOV1N-ia2x4&sz=w1000","menu":"https://drive.google.com/thumbnail?id=1p9w7eT8VKPRw3EJYyhm67Jfz4rojVs8C&sz=w1000","price":"3,190","info":""},
+  {"type":"Jewelry","brand":"vivienne Westwood","realLogo":"https://drive.google.com/thumbnail?id=1QRTHLvAJq39yiWa399SzIYtlqI6g2ORm&sz=w1000","fakeLogo":"https://drive.google.com/thumbnail?id=1G3z95jH_jIb2p8ledvAfexgctgq8-VNq&sz=w1000","menu":"https://drive.google.com/thumbnail?id=159tc_zNnPVXWh9R0ebtf5-6PRn2xOWIB&sz=w1000","price":"6,500","info":""},
   {"type":"Snack","brand":"Doritos","realLogo":"https://drive.google.com/thumbnail?id=1hqTRj1rgwPwCgi_7__w559d0qpJgZOGG&sz=w1000","fakeLogo":"https://drive.google.com/thumbnail?id=196XgDLNgEb37d33JN8It4L4Iyc5FZ14M&sz=w1000","menu":"https://drive.google.com/thumbnail?id=1w2PlshAUSq0n9gv_D56XhiksTPmTGuCi&sz=w1000","price":"31","info":""},
   {"type":"Snack","brand":"Pringles","realLogo":"https://drive.google.com/thumbnail?id=1m1KYjp8XuBikLVTwZZbp7-pDBZ93cLwq&sz=w1000","fakeLogo":"https://drive.google.com/thumbnail?id=1YJ9KSHAXl-nX0etuJKObu3K7oHSsThYC&sz=w1000","menu":"https://drive.google.com/thumbnail?id=1LYawAhBBlvSttaeW880DyhRJpFCoiNZP&sz=w1000","price":"62","info":""},
   {"type":"Snack","brand":"Oreo","realLogo":"https://drive.google.com/thumbnail?id=1fnPcbvPP6OcbRuwhMSmGtoRg_WfTGNSc&sz=w1000","fakeLogo":"https://drive.google.com/thumbnail?id=12XmWhkKBxjhWAwcM8Bs3sJvtDsFPKtNX&sz=w1000","menu":"https://drive.google.com/thumbnail?id=1UqDUrSKZqgPAwZHtnxVl5fBXFK6Vm2Y_&sz=w1000","price":"7","info":""},
   {"type":"Snack","brand":"Snickers","realLogo":"https://drive.google.com/thumbnail?id=1GvAwQG5NZTfYMB9apnZNa9FOz94i8835&sz=w1000","fakeLogo":"https://drive.google.com/thumbnail?id=1nFx_wcVzc55LwcA0Z5sjlxSUDkmbRTE4&sz=w1000","menu":"https://drive.google.com/thumbnail?id=1nRVH0rzACkVf1rvInCn9G5hRU4eDJeTY&sz=w1000","price":"48","info":""}
 ];
 
-let data=[...DATA], timerId=null, timeLeft=60, currentScreen="";
+let data=[...DATA], timerId=null, timeLeft=65, currentScreen="";
 let state={
   mistakes:0, l1Items:[], l1CorrectBrands:new Set(), l1CurrentItem:null,
   l2SelectedLogo:null, l2SelectedMenu:null, l2Matched:new Set(), l2Logos:[], l2Menus:[],
@@ -157,7 +160,7 @@ function parsePrice(v){
  s=s.replace(/[฿$]/g,""); let n=parseFloat(s.replace(/[^0-9.]/g,"")); return Number.isFinite(n)?n:Infinity;
 }
 
-function resetTimer(elId,seconds=60){
+function resetTimer(elId, seconds=65){
  clearInterval(timerId); timeLeft=seconds; renderTimer(elId);
  timerId=setInterval(()=>{ timeLeft--; renderTimer(elId); if(timeLeft<=0){ clearInterval(timerId); gameOver(); } },1000);
 }
@@ -167,11 +170,6 @@ function getFullTypeSet() {
   const types = [...new Set(data.map(item => item.type))];
   const randomType = types[Math.floor(Math.random() * types.length)];
   return data.filter(item => item.type === randomType);
-}
-
-function getRandom3Set() {
-  const fullSet = getFullTypeSet();
-  return shuffle(fullSet).slice(0, 3);
 }
 
 async function startGame(){
@@ -186,6 +184,7 @@ function startLevel1(){
  state.l1Items = getFullTypeSet();
  state.l1CurrentItem = null;
  show("level1");
+ resetTimer("timer1", 65);
  nextL1();
 }
 
@@ -206,7 +205,7 @@ function nextL1(){
  document.getElementById("l1feedback").textContent = "";
  document.getElementById("l1cards").innerHTML = cards.map((c,n) => `<button class="choice" onclick="answerL1(${c.real},this)"><img src="${c.url}" alt="Logo ${n+1}"><div class="label"></div></button>`).join("");
  
- if(!timerId || timeLeft <= 0) resetTimer("timer1"); else renderTimer("timer1");
+ renderTimer("timer1");
 }
 
 function answerL1(isReal, btn){
@@ -219,7 +218,7 @@ function answerL1(isReal, btn){
  } else {
   btn.classList.add("wrong");
   state.mistakes++;
-  document.getElementById("l1feedback").textContent = "🔮 ผิดครั้งที่ 1";
+  document.getElementById("l1feedback").textContent = "🔮 ผิดครั้งที่ 1!";
   if(state.mistakes >= 2) setTimeout(gameOver, 500);
   else setTimeout(nextL1, 500);
  }
@@ -233,20 +232,20 @@ function startLevel2(){
  state.l2SelectedLogo = null;
  state.l2SelectedMenu = null;
  
- const selected = getRandom3Set();
- state.l2Logos = shuffle(selected.map((r, i) => ({i, url: r.realLogo, brand: r.brand})));
- state.l2Menus = shuffle(selected.map((r, i) => ({i, url: r.menu, brand: r.brand})));
+ const selected = getFullTypeSet();
+ state.l2Logos = shuffle(selected.map((r) => ({url: r.realLogo, brand: r.brand})));
+ state.l2Menus = shuffle(selected.map((r) => ({url: r.menu, brand: r.brand})));
  
  const feedback = document.getElementById("l2feedback");
  if(feedback) feedback.textContent = "";
  
  show("level2");
  renderLevel2();
- resetTimer("timer2");
+ resetTimer("timer2", 65);
 }
 
 function renderLevel2(){
- document.getElementById("l2progress").textContent = `จับคู่แล้ว ${state.l2Matched.size} / 3 • ผิด ${state.mistakes} / 1`;
+ document.getElementById("l2progress").textContent = `จับคู่แล้ว ${state.l2Matched.size} / 4 • ผิด ${state.mistakes} / 1`;
  
  const logoHTML = state.l2Logos.map(x => {
   const isMatched = state.l2Matched.has(x.brand);
@@ -292,7 +291,7 @@ function checkL2Match(logoBrand, menuBrand){
   state.l2SelectedMenu = null;
   document.getElementById("l2feedback").textContent = "✨ จับคู่ถูกต้อง!";
   renderLevel2();
-  if(state.l2Matched.size === 3){
+  if(state.l2Matched.size === 4){
    setTimeout(startLevel3, 500);
   }
  } else {
@@ -312,9 +311,9 @@ function startLevel3(){
  clearInterval(timerId);
  state.l3Mistakes = 0;
  
- const selected = getRandom3Set();
+ const selected = getFullTypeSet();
  state.priceItems = shuffle(selected.map((r, i) => ({idx: i, ...r, revealed: false})));
- state.order = [null, null, null];
+ state.order = [null, null, null, null];
  
  const feedback = document.getElementById("l3feedback");
  if(feedback) feedback.textContent = "";
@@ -328,7 +327,7 @@ function startLevel3(){
  
  show("level3");
  buildLevel3();
- resetTimer("timer3");
+ resetTimer("timer3", 65);
 }
 
 function buildLevel3(){
@@ -360,7 +359,7 @@ function buildLevel3(){
       <img src="${state.priceItems[item].menu}">
       <div class="info">${state.priceItems[item].info || ""}</div>
       ${state.priceItems[item].revealed ? `<div class="price-reveal">฿${state.priceItems[item].price}</div>` : ""}
-    </div>` : "<span style='color:#a89260;'>วางที่นี่ / แตะเพื่อใส่</span>"}
+    </div>` : "<span style='color:#a89260; font-size:12px;'>วางที่นี่ / แตะใส่</span>"}
  </div>`).join("");
 }
 
@@ -393,12 +392,12 @@ function placeFood(i, slot) {
 
 function checkLevel3(){
  if(state.order.some(x => x === null)){
-  document.getElementById("l3feedback").textContent = "⚠️ กรุณาใส่อาหารให้ครบ 3 ช่องก่อน";
+  document.getElementById("l3feedback").textContent = "⚠️ กรุณาใส่อาหาร/สินค้าให้ครบทั้ง 4 ช่องก่อน";
   return;
  }
  
  const prices = state.order.map(i => parsePrice(state.priceItems[i].price));
- const ok = prices[0] <= prices[1] && prices[1] <= prices[2];
+ const ok = prices[0] <= prices[1] && prices[1] <= prices[2] && prices[2] <= prices[3];
  const btn = document.getElementById("checkBtn");
  
  if(ok){
@@ -412,7 +411,7 @@ function checkLevel3(){
  } else {
   state.l3Mistakes++;
   if(state.l3Mistakes === 1){
-   document.getElementById("l3feedback").textContent = "🔮 ยังไม่ถูกต้อง!";
+   document.getElementById("l3feedback").textContent = "🔮 ยังไม่ถูกต้อง! ลองสลับลำดับใหม่อีกครั้ง";
   } else {
    clearInterval(timerId);
    state.priceItems.forEach(x => x.revealed = true);
