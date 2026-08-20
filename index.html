@@ -219,7 +219,7 @@ function answerL1(isReal, btn){
  } else {
   btn.classList.add("wrong");
   state.mistakes++;
-  document.getElementById("l1feedback").textContent = "🔮 ผิดครั้งที่ 1 — สลับแบรนด์อื่นขึ้นมา!";
+  document.getElementById("l1feedback").textContent = "🔮 ผิดครั้งที่ 1";
   if(state.mistakes >= 2) setTimeout(gameOver, 500);
   else setTimeout(nextL1, 500);
  }
@@ -412,7 +412,7 @@ function checkLevel3(){
  } else {
   state.l3Mistakes++;
   if(state.l3Mistakes === 1){
-   document.getElementById("l3feedback").textContent = "🔮 ยังไม่ถูกต้อง! ลองสลับลำดับใหม่อีกครั้ง";
+   document.getElementById("l3feedback").textContent = "🔮 ยังไม่ถูกต้อง!";
   } else {
    clearInterval(timerId);
    state.priceItems.forEach(x => x.revealed = true);
