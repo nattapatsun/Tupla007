@@ -38,7 +38,6 @@ button{font:inherit;border:0;cursor:pointer;touch-action:manipulation}
 .choice.wrong{border-color:var(--red);background:#fff0ee}
 .feedback{text-align:center;min-height:28px;font-weight:bold;margin:12px 0}
 
-/* Level 2 & 3 Layout (รองรับ 4 ชิ้น) */
 .match-grid{display:flex;flex-direction:column;gap:24px;max-width:900px;margin:0 auto}
 .match-side{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
 .match-card{background:#fff;border:3px solid #dcc89d;border-radius:18px;padding:8px;min-height:130px;display:flex;align-items:center;justify-content:center;transition:all 0.15s ease}
@@ -191,13 +190,10 @@ function startLevel1(){
 function nextL1(){
  if(state.l1CorrectBrands.size >= 4){ startLevel2(); return; }
  
- // ดึงแบรนด์ที่ยังไม่ได้ตอบถูกทั้งหมด
  const uncorrectItems = state.l1Items.filter(item => !state.l1CorrectBrands.has(item.brand));
  
- // คัดแบรนด์ที่เพิ่งตอบผิดออก (หากมี)
  let remainingItems = uncorrectItems.filter(item => !state.l1CurrentItem || item.brand !== state.l1CurrentItem.brand);
  
- // หากเหลือแบรนด์สุดท้ายที่เพิ่งตอบผิดพอดี ให้ใช้แบรนด์เดิมขึ้นมาถามซ้ำ
  if(remainingItems.length === 0){
    remainingItems = uncorrectItems;
  }
