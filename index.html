@@ -138,7 +138,7 @@ const DATA = [
   {"type":"Jewelry","brand":"Ravipa","realLogo":"https://drive.google.com/thumbnail?id=10g2vKpMpUKAs7taq0_ds_WGQ7bnxPYw0&sz=w1000","fakeLogo":"https://drive.google.com/thumbnail?id=1mIHZtJKm0vi_coDdUn1O1vOV1N-ia2x4&sz=w1000","menu":"https://drive.google.com/thumbnail?id=1p9w7eT8VKPRw3EJYyhm67Jfz4rojVs8C&sz=w1000","price":"3,190","info":""},
   {"type":"Jewelry","brand":"vivienne Westwood","realLogo":"https://drive.google.com/thumbnail?id=1QRTHLvAJq39yiWa399SzIYtlqI6g2ORm&sz=w1000","fakeLogo":"https://drive.google.com/thumbnail?id=1G3z95jH_jIb2p8ledvAfexgctgq8-VNq&sz=w1000","menu":"https://drive.google.com/thumbnail?id=159tc_zNnPVXWh9R0ebtf5-6PRn2xOWIB&sz=w1000","price":"6,500","info":""},
   {"type":"Snack","brand":"Doritos","realLogo":"https://drive.google.com/thumbnail?id=1hqTRj1rgwPwCgi_7__w559d0qpJgZOGG&sz=w1000","fakeLogo":"https://drive.google.com/thumbnail?id=196XgDLNgEb37d33JN8It4L4Iyc5FZ14M&sz=w1000","menu":"https://drive.google.com/thumbnail?id=1w2PlshAUSq0n9gv_D56XhiksTPmTGuCi&sz=w1000","price":"31","info":""},
-  {"type":"Snack","brand":"Pringles","realLogo":"https://drive.google.com/thumbnail?id=1m1KYjp8XuBikLVTwZZbp7-pDBZ93cLwq&sz=w1000","fakeLogo":"https://drive.google.com/thumbnail?id=1YJ9KSHAXl-nX0etuJKObu3K7oHSsThYC&sz=w1000","menu":"https://drive.google.com/thumbnail?id=1LYawAhBBlvSttaeW880DyhRJpFCoiNZP&sz=w1000","price":"62","info":""},
+  {"type":"Snack","brand":"Pringles","realLogo":"https://drive.google.com/thumbnail?id=1m1KYjp8XuBikLVTwZZbp7-pDBZ93cLwq&sz=w1000","fakeLogo":"https://drive.google.com/thumbnail?id=1YJ9KSHAXl-nX0etuJKObu3K7oHSsThYC&sz=w1000","price":"62","info":""},
   {"type":"Snack","brand":"Oreo","realLogo":"https://drive.google.com/thumbnail?id=1fnPcbvPP6OcbRuwhMSmGtoRg_WfTGNSc&sz=w1000","fakeLogo":"https://drive.google.com/thumbnail?id=12XmWhkKBxjhWAwcM8Bs3sJvtDsFPKtNX&sz=w1000","menu":"https://drive.google.com/thumbnail?id=1UqDUrSKZqgPAwZHtnxVl5fBXFK6Vm2Y_&sz=w1000","price":"7","info":""},
   {"type":"Snack","brand":"Snickers","realLogo":"https://drive.google.com/thumbnail?id=1GvAwQG5NZTfYMB9apnZNa9FOz94i8835&sz=w1000","fakeLogo":"https://drive.google.com/thumbnail?id=1nFx_wcVzc55LwcA0Z5sjlxSUDkmbRTE4&sz=w1000","menu":"https://drive.google.com/thumbnail?id=1nRVH0rzACkVf1rvInCn9G5hRU4eDJeTY&sz=w1000","price":"48","info":""}
 ];
@@ -189,19 +189,25 @@ function startLevel1(){
 }
 
 function nextL1(){
- if(state.l1CorrectBrands.size >= 3){ startLevel2(); return; }
+ if(state.l1CorrectBrands.size >= 4){ startLevel2(); return; }
  
- const remainingItems = state.l1Items.filter(item => 
-   !state.l1CorrectBrands.has(item.brand) && 
-   (!state.l1CurrentItem || item.brand !== state.l1CurrentItem.brand)
- );
+ // ดึงแบรนด์ที่ยังไม่ได้ตอบถูกทั้งหมด
+ const uncorrectItems = state.l1Items.filter(item => !state.l1CorrectBrands.has(item.brand));
+ 
+ // คัดแบรนด์ที่เพิ่งตอบผิดออก (หากมี)
+ let remainingItems = uncorrectItems.filter(item => !state.l1CurrentItem || item.brand !== state.l1CurrentItem.brand);
+ 
+ // หากเหลือแบรนด์สุดท้ายที่เพิ่งตอบผิดพอดี ให้ใช้แบรนด์เดิมขึ้นมาถามซ้ำ
+ if(remainingItems.length === 0){
+   remainingItems = uncorrectItems;
+ }
  
  const currentItem = remainingItems[Math.floor(Math.random() * remainingItems.length)];
  state.l1CurrentItem = currentItem;
  
  const cards = shuffle([{real:true, url:currentItem.realLogo}, {real:false, url:currentItem.fakeLogo}]);
  
- document.getElementById("l1progress").textContent = `ถูกต้องแล้ว ${state.l1CorrectBrands.size} / 3 • ผิด ${state.mistakes} / 1`;
+ document.getElementById("l1progress").textContent = `ถูกต้องแล้ว ${state.l1CorrectBrands.size} / 4 • ผิด ${state.mistakes} / 1`;
  document.getElementById("l1feedback").textContent = "";
  document.getElementById("l1cards").innerHTML = cards.map((c,n) => `<button class="choice" onclick="answerL1(${c.real},this)"><img src="${c.url}" alt="Logo ${n+1}"><div class="label"></div></button>`).join("");
  
@@ -214,7 +220,7 @@ function answerL1(isReal, btn){
   btn.classList.add("correct");
   state.l1CorrectBrands.add(state.l1CurrentItem.brand);
   document.getElementById("l1feedback").textContent = "✨ ถูกต้อง!";
-  setTimeout(() => { if(state.l1CorrectBrands.size >= 3) startLevel2(); else nextL1(); }, 500);
+  setTimeout(() => { if(state.l1CorrectBrands.size >= 4) startLevel2(); else nextL1(); }, 500);
  } else {
   btn.classList.add("wrong");
   state.mistakes++;
